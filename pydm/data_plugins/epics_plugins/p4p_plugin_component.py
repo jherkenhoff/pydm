@@ -95,6 +95,10 @@ class Connection(PyDMConnection):
                             self.new_value_signal[int].emit(new_value)
                         elif isinstance(new_value, str):
                             self.new_value_signal[str].emit(new_value)
+                        elif isinstance(new_value, Value) and new_vallue.has("index") and new_value.has("choices"):
+                            # If new_value has an "index" and "choices" subfield, it seems to be an enum...
+                            self.enum_strings_signal.emit(tuple(new_value.choices))
+                            self.new_value_signal[int].emit(new_value.index)
                         else:
                             raise ValueError(f'No matching signal for value: {new_value} with type: {type(new_value)}')
                 # Sometimes unchanged control variables appear to be returned with value changes, so checking against
