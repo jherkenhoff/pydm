@@ -100,7 +100,7 @@ class Connection(PyDMConnection):
                 elif changed_value == 'value.index':
                     self.new_value_signal[int].emit(value.value.index)
                 elif changed_value == 'value.choices':
-                    if value.value.choices != self._enum_strs
+                    if value.value.choices != self._enum_strs:
                         self._enum_strs = value.value.choices
                         self.enum_strings_signal.emit(tuple(value.value.choices))
                 # Sometimes unchanged control variables appear to be returned with value changes, so checking against
