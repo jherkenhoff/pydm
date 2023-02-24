@@ -83,8 +83,6 @@ class Connection(PyDMConnection):
                 if changed_value == 'value':
                     new_value = value.value
                     if new_value is not None:
-                        print(self.address, flush=True)
-                        print(new_value, flush=True)
                         if isinstance(new_value, np.ndarray):
                             if 'NTNDArray' in value.getID():
                                 new_value = decompress(value)
@@ -97,12 +95,12 @@ class Connection(PyDMConnection):
                             self.new_value_signal[int].emit(new_value)
                         elif isinstance(new_value, str):
                             self.new_value_signal[str].emit(new_value)
-                        elif isinstance(new_value, Value) and new_vallue.has("index") and new_value.has("choices"):
-                            # If new_value has an "index" and "choices" subfield, it seems to be an enum...
-                            self.enum_strings_signal.emit(tuple(new_value.choices))
-                            self.new_value_signal[int].emit(new_value.index)
                         else:
                             raise ValueError(f'No matching signal for value: {new_value} with type: {type(new_value)}')
+                elif changed_value == 'value.index':
+                    self.new_value_signal[int].emit(value.value.index)
+                elif changed_value == 'value.choices':
+                    self.enum_strings_signal.emit(tuple(value.value.choices))
                 # Sometimes unchanged control variables appear to be returned with value changes, so checking against
                 # stored values to avoid sending misleading signals. Will revisit on data plugin changes.
                 elif changed_value == 'alarm.severity' and value.alarm.severity != self._severity:
