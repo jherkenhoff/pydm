@@ -83,6 +83,8 @@ class Connection(PyDMConnection):
                 if changed_value == 'value':
                     new_value = value.value
                     if new_value is not None:
+                        print(self.address, flush=True)
+                        print(new_value, flush=True)
                         if isinstance(new_value, np.ndarray):
                             if 'NTNDArray' in value.getID():
                                 new_value = decompress(value)
